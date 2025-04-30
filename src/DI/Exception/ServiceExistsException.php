@@ -1,5 +1,5 @@
 <?php
 
-namespace App\DI\Exceptions;
+namespace App\DI\Exception;
 
 class ServiceExistsException extends \Exception{}

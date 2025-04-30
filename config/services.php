@@ -2,6 +2,7 @@
 
 
 use App\DI\ContainerDI;
+use App\Router\Router;
 
 return [
     PDO::class => function (ContainerDI $container) {
@@ -12,6 +13,12 @@ return [
         $password = getenv('password');
 
         return new PDO("pgsql:host=$host;port=$port;dbname=$dbName", $user, $password);
+    },
+    Router::class => function (ContainerDI $container) {
+        $router = new Router(__DIR__);
+        $router->build();
+
+        return $router;
     },
 
 ];

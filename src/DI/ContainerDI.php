@@ -2,9 +2,9 @@
 
 namespace App\DI;
 
-use App\DI\Exceptions\FailReadServicesConfigException;
-use App\DI\Exceptions\ServiceExistsException;
-use App\DI\Exceptions\ServiceNotFoundException;
+use App\DI\Exception\FailReadServicesConfigException;
+use App\DI\Exception\ServiceExistsException;
+use App\DI\Exception\ServiceNotFoundException;
 
 
 class ContainerDI
