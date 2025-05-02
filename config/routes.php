@@ -3,6 +3,6 @@
 
 return [
     'GET' => [
-        '/' => [\App\Router\Router::class, 'get']
+        '/' => [\App\Framework\Router\HttpRouter::class, 'get']
     ],
 ];

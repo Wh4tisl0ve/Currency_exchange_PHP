@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DI;
+namespace App\Framework\DI;
 
-use App\DI\Exception\FailReadServicesConfigException;
-use App\DI\Exception\ServiceExistsException;
-use App\DI\Exception\ServiceNotFoundException;
+use App\Framework\DI\Exception\FailReadServicesConfigException;
+use App\Framework\DI\Exception\ServiceExistsException;
+use App\Framework\DI\Exception\ServiceNotFoundException;
 
 
 class ContainerDI

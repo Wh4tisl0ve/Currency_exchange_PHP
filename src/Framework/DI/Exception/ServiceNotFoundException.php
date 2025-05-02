@@ -1,5 +1,5 @@
 <?php
 
-namespace App\DI\Exception;
+namespace App\Framework\DI\Exception;
 
 class ServiceNotFoundException extends \Exception{}

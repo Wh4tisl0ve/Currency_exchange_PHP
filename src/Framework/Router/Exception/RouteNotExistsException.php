@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Router\Exception;
+namespace App\Framework\Router\Exception;
 
 class RouteNotExistsException extends \Exception{}
