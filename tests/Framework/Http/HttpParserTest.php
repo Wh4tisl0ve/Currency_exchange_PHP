@@ -2,8 +2,8 @@
 
 namespace Tests\Framework\HttpParser;
 
-use App\Framework\HttpParser\HttpParser;
-use App\Framework\HttpParser\HttpRequest;
+use App\Framework\Http\HttpParser;
+use App\Framework\Http\HttpRequest;
 use PHPUnit\Framework\TestCase;
 
 class HttpParserTest extends TestCase
