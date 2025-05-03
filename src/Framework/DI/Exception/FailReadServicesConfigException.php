@@ -2,4 +2,6 @@
 
 namespace App\Framework\DI\Exception;
 
-class FailReadServicesConfigException extends \Exception{}
+use Psr\Container\ContainerExceptionInterface;
+
+class FailReadServicesConfigException extends \Exception implements ContainerExceptionInterface{}
