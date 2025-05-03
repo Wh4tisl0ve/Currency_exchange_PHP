@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Framework\HttpParser;
+namespace App\Framework\Http;
 
 class HttpRequest
 {
