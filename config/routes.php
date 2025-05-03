@@ -1,8 +1,10 @@
 <?php
 
 
+use App\CurrencyExchange\Controller\CurrencyController;
+
 return [
     'GET' => [
-        '/' => [\App\Framework\Router\HttpRouter::class, 'get']
+        '/currencies' => [CurrencyController::class, 'getAllCurrencies']
     ],
 ];
