@@ -30,8 +30,23 @@ class HttpRouter extends AbstractRouter
     public function get(string $nameRoute, string $method = 'GET'): array
     {
         if (isset($this->routes[$method][$nameRoute])) {
-            return $this->routes[$method][$nameRoute];
+            return [
+                "handler" => $this->routes[$method][$nameRoute],
+                "params" => []
+            ];
         }
+
+        $routes = $this->routes[$method];
+        foreach ($routes as $route => $handler) {
+            if (preg_match($route, $nameRoute, $params)) {
+                $params = array_filter($params, 'is_string', ARRAY_FILTER_USE_KEY);
+                return [
+                    "handler" => $handler,
+                    "params" => $params
+                ];
+            }
+        }
+
         throw new RouteNotExistsException("Не найдено обработчика для $nameRoute");
     }
 }
