@@ -1,23 +1,16 @@
 <?php
 
-namespace App\Framework\DI;
+namespace App\Framework\Container;
 
-use App\Framework\DI\Exception\FailReadServicesConfigException;
-use App\Framework\DI\Exception\ServiceExistsException;
-use App\Framework\DI\Exception\ServiceNotFoundException;
+use App\Framework\Container\Exception\FailReadServicesConfigException;
+use App\Framework\Container\Exception\ServiceExistsException;
+use App\Framework\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
 
-class ContainerDI implements ContainerInterface
+class Container implements ContainerInterface
 {
     private array $services = [];
     private array $instances = [];
-
-    private string $configPath;
-
-    public function __construct(string $configPath)
-    {
-        $this->configPath = $configPath;
-    }
 
     /**
      * @throws ServiceNotFoundException
@@ -54,16 +47,16 @@ class ContainerDI implements ContainerInterface
     /**
      * @throws ServiceExistsException|FailReadServicesConfigException
      */
-    public function compile(string $filename = 'services.php'): void
+    public function compile(string $filename = '../config/services.php'): void
     {
         try {
-            $services = require $this->configPath . $filename;
+            $services = require $filename;
 
             foreach ($services as $name => $callable) {
                 $this->register($name, $callable);
             }
         } catch (\Error) {
-            throw new FailReadServicesConfigException("Не найден конфигурационный файл " . $this->configPath . $filename);
+            throw new FailReadServicesConfigException("Не найден конфигурационный файл " . $filename);
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Framework\DI\Exception;
+namespace App\Framework\Container\Exception;
 
 use Psr\Container\ContainerExceptionInterface;
 
