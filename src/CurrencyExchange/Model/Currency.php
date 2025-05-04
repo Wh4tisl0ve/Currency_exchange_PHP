@@ -18,14 +18,9 @@ class Currency
         $this->sign = $sign;
     }
 
-    public function getSign(): string
+    public function getId(): int
     {
-        return $this->sign;
-    }
-
-    public function getFullName(): string
-    {
-        return $this->fullName;
+        return $this->id;
     }
 
     public function getCode(): string
@@ -33,8 +28,13 @@ class Currency
         return $this->code;
     }
 
-    public function getId(): int
+    public function getFullName(): string
     {
-        return $this->id;
+        return $this->fullName;
+    }
+
+    public function getSign(): string
+    {
+        return $this->sign;
     }
 }

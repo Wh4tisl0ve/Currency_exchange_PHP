@@ -19,10 +19,37 @@ class CurrencyController
     {
         try {
             $currencies = $this->currencyDAO->findAll();
-            return json_encode($currencies, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+            $currenciesJson = array_map(function ($currency) {
+                return [
+                    'id' => $currency->getId(),
+                    'code' => $currency->getCode(),
+                    'name' => $currency->getFullName(),
+                    'sign' => $currency->getSign(),
+                ];
+            }, $currencies);
+
+            return json_encode($currenciesJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         } catch (PDOException $exception) {
             return json_encode(["message" => "База данных недоступна"], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
+    }
 
+    public function getCurrency(HttpRequest $httpRequest, string $currencyCode): string
+    {
+        try {
+            $currency = $this->currencyDAO->findOne($currencyCode);
+
+            $currencyJson = [
+                'id' => $currency->getId(),
+                'code' => $currency->getCode(),
+                'name' => $currency->getFullName(),
+                'sign' => $currency->getSign(),
+            ];
+
+            return json_encode($currencyJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        } catch (PDOException $exception) {
+            return json_encode(["message" => "База данных недоступна"], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        }
     }
 }

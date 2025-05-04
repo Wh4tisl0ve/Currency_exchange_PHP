@@ -3,6 +3,7 @@
 namespace App\CurrencyExchange\DAO\Currency;
 
 use PDO;
+use App\CurrencyExchange\DAO\Exception\CurrencyNotExistsException;
 use App\CurrencyExchange\Model\Currency;
 
 
@@ -34,6 +35,9 @@ class DBCurrencyDAO implements CurrencyDAOInterface
         return $currencies;
     }
 
+    /**
+     * @throws CurrencyNotExistsException
+     */
     public function findOne(string $code): Currency
     {
         $stmt = $this->pdo->prepare("SELECT * FROM currencies WHERE code ILIKE :code;");
@@ -41,7 +45,7 @@ class DBCurrencyDAO implements CurrencyDAOInterface
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$data) {
-            throw new \Exception("Валюта с кодом $code не найдена");
+            throw new CurrencyNotExistsException("Валюта с кодом $code не найдена");
         }
 
         return new Currency(
