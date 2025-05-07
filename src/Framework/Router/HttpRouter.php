@@ -3,6 +3,7 @@
 namespace App\Framework\Router;
 
 
+use App\Framework\Contract\AbstractRouter;
 use App\Framework\Router\Exception\RouteExistsException;
 use App\Framework\Router\Exception\RouteNotExistsException;
 

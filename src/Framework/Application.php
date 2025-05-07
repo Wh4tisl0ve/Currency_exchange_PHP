@@ -2,11 +2,12 @@
 
 namespace App\Framework;
 
-use ReflectionMethod;
-use App\Framework\Http\HttpRequest;
 use App\Framework\ArgumentsResolver\ArgumentsResolver;
 use App\Framework\Container\Container;
-use App\Framework\Router\AbstractRouter;
+use App\Framework\Contract\AbstractRouter;
+use App\Framework\Http\HttpRequest;
+use App\Framework\Http\Response\HttpResponse;
+use ReflectionMethod;
 
 
 class Application extends Container
@@ -20,7 +21,7 @@ class Application extends Container
         $this->router->build();
     }
 
-    public function handle(HttpRequest $httpRequest): void
+    public function handle(HttpRequest $httpRequest): HttpResponse
     {
         $route = $this->router->get($httpRequest->getUri(), $httpRequest->getMethod());
 
@@ -33,6 +34,6 @@ class Application extends Container
 
         $methodArguments = ArgumentsResolver::resolveArguments($methodParams, $args);
 
-        echo call_user_func_array([$controllerInstance, $methodName], $methodArguments);
+        return call_user_func_array([$controllerInstance, $methodName], $methodArguments);
     }
 }

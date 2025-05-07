@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Framework\Router;
+namespace App\Framework\Contract;
 
 
 abstract class AbstractRouter

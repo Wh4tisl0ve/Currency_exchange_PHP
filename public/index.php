@@ -10,6 +10,5 @@ $httpRequest = HttpParser::parse($_SERVER);
 
 $app = new Application();
 
-header('Content-Type: application/json; charset=utf-8');
-$app->handle($httpRequest);
-#$response->send();
+$response = $app->handle($httpRequest);
+$response->send();

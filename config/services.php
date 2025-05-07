@@ -4,7 +4,7 @@ use App\CurrencyExchange\Controller\CurrencyController;
 use App\CurrencyExchange\DAO\Currency\CurrencyDAOInterface;
 use App\CurrencyExchange\DAO\Currency\DBCurrencyDAO;
 use App\Framework\Container\Container;
-use App\Framework\Router\AbstractRouter;
+use App\Framework\Contract\AbstractRouter;
 use App\Framework\Router\HttpRouter;
 
 
