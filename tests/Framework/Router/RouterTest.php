@@ -2,15 +2,15 @@
 
 namespace Tests\Framework\Router;
 
-use App\Framework\Router\AbstractRouter;
+use App\Framework\Contract\AbstractRouter;
 use App\Framework\Router\Exception\RouteExistsException;
-use App\Framework\Router\Exception\RouteNotExistsException;
+use App\Framework\Router\Exception\RouteNotFoundException;
 use App\Framework\Router\HttpRouter;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
-    private AbstractRouter $router;
+    private ?AbstractRouter $router;
 
     public function setUp(): void
     {
@@ -39,17 +39,25 @@ class RouterTest extends TestCase
 
         $handler = $this->router->get('testName');
 
-        $expectedResult = ['handler', 'get'];
+        $expectedResult = [
+            "handler" => ['handler', 'get'],
+            "params" => []
+        ];
 
         $this->assertEquals($expectedResult, $handler);
     }
 
     public function testGetNotExistsRoute()
     {
-        $this->expectException(RouteNotExistsException::class);
+        $this->expectException(RouteNotFoundException::class);
 
         $this->router->get('testName');
 
         $this->assertTrue(true);
+    }
+
+    public function tearDown(): void
+    {
+        $this->router = null;
     }
 }
