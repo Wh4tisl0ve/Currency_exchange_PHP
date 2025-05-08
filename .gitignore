@@ -1,0 +1,45 @@
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Composer
+/vendor/
+/composer.lock
+
+# PHPUnit
+.phpunit.result.cache
+/test-results/
+/coverage/
+
+# Environment
+.env
+
+# Docker / CI
+.docker/
+/docker-compose.override.yml
+
+# Логи и временные файлы
+*.log
+*.cache
+*.tmp
+*.swp
+
+# Кеш браузера или PHP
+*.bak
+*.old
+*.orig
+
+# Другие распространённые каталоги
+/build/
+/dist/
+/tmp/
+/coverage/
+
+composer-setup.php
+composer.phar

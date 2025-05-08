@@ -1,0 +1,37 @@
+services:
+  fpm:
+    restart: always
+    build:
+      context: .
+      dockerfile: deploy/currency_exchange/xdebug/Dockerfile
+      target: php-extensions
+    env_file: .env
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+    volumes:
+      - "./:/www/"
+      - "./deploy/currency_exchange_local/fpm/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
+      - "./deploy/currency_exchange_local/fpm/php.ini:/usr/local/etc/php/php.ini"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    depends_on:
+      - fpm
+    ports:
+      - "8080:80"
+    volumes:
+      - "./deploy/currency_exchange_local/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+
+  composer:
+    restart: always
+    build:
+      context: .
+      dockerfile: deploy/currency_exchange/xdebug/Dockerfile
+      target: php-extensions
+    env_file: .env
+    volumes:
+      - "./:/www/"
+    command: [ "/bin/bash", "-c", "composer install --no-interaction --optimize-autoloader; while true; do sleep 10; done" ]
