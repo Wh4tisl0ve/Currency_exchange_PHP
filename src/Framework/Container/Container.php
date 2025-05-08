@@ -47,7 +47,7 @@ class Container implements ContainerInterface
     /**
      * @throws ServiceExistsException|FailReadServicesConfigException
      */
-    public function compile(string $filename = '../config/services.php'): void
+    public function compile(string $filename): void
     {
         try {
             $services = require $filename;

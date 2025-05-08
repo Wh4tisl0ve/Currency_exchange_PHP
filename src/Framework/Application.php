@@ -14,9 +14,9 @@ class Application extends Container
 {
     private AbstractRouter $router;
 
-    public function __construct()
+    public function __construct(?string $configServicesPath = '../config/services.php')
     {
-        $this->compile();
+        $this->compile($configServicesPath);
         $this->router = $this->get(AbstractRouter::class);
         $this->router->build();
     }
@@ -35,5 +35,10 @@ class Application extends Container
         $methodArguments = ArgumentsResolver::resolveArguments($methodParams, $args);
 
         return call_user_func_array([$controllerInstance, $methodName], $methodArguments);
+    }
+
+    public function registerExceptionHandler(callable $exceptionHandler): void
+    {
+        set_exception_handler($exceptionHandler);
     }
 }

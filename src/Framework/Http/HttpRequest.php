@@ -3,6 +3,9 @@
 
 namespace App\Framework\Http;
 
+use App\Framework\Exception\ValidationException;
+use App\Framework\Http\Exception\ValidationDataException;
+
 class HttpRequest
 {
     private string $uri;
@@ -29,5 +32,17 @@ class HttpRequest
     public function getMethod(): string
     {
         return $this->method;
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function validateData(array $requiredField): void
+    {
+        foreach ($requiredField as $field) {
+            if (!isset($this->data[$field])) {
+                throw new ValidationDataException("Отсутствует обязательное поле $field");
+            }
+        }
     }
 }

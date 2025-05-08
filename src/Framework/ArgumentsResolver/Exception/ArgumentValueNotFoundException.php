@@ -2,4 +2,4 @@
 
 namespace App\Framework\ArgumentsResolver\Exception;
 
-class ArgumentValueNotFound extends \Exception{}
+class ArgumentValueNotFoundException extends \Exception{}
