@@ -2,4 +2,6 @@
 
 namespace App\CurrencyExchange\DAO\Exception;
 
-class CurrencyNotFoundException extends \Exception{}
+use App\Framework\Exception\NotFoundException;
+
+class CurrencyNotFoundException extends NotFoundException{}

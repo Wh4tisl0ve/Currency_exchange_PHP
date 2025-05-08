@@ -9,9 +9,6 @@ interface CurrencyDAOInterface
 {
     public function findAll(): array;
 
-    /**
-     * @throws CurrencyNotFoundException
-     */
     public function findOne(string $code): Currency;
 
     public function add(Currency $currency): void;

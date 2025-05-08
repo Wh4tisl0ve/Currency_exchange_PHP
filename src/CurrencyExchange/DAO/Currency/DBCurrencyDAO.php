@@ -2,9 +2,12 @@
 
 namespace App\CurrencyExchange\DAO\Currency;
 
+use App\CurrencyExchange\DAO\Exception\CurrencyCodeExistsException;
+use App\CurrencyExchange\DAO\Exception\ValidationCodeCurrencyException;
 use PDO;
 use App\CurrencyExchange\DAO\Exception\CurrencyNotFoundException;
 use App\CurrencyExchange\Model\Currency;
+use PDOException;
 
 
 class DBCurrencyDAO implements CurrencyDAOInterface
@@ -25,10 +28,10 @@ class DBCurrencyDAO implements CurrencyDAOInterface
         $currencies = [];
         foreach ($data as $currency) {
             $currencies[] = new Currency(
-                $currency["id"],
                 $currency["code"],
                 $currency["fullname"],
-                $currency["sign"]
+                $currency["sign"],
+                $currency["id"]
             );
         }
 
@@ -49,20 +52,37 @@ class DBCurrencyDAO implements CurrencyDAOInterface
         }
 
         return new Currency(
-            $data["id"],
             $data["code"],
             $data["fullname"],
-            $data["sign"]
+            $data["sign"],
+            $data["id"]
         );
     }
 
+    /**
+     * @throws CurrencyCodeExistsException
+     * @throws ValidationCodeCurrencyException
+     */
     public function add(Currency $currency): void
     {
-        $stmt = $this->pdo->prepare("INSERT INTO currencies VALUES (:code, :fullName, :sign)");
-        $stmt->execute([
-            'code' => $currency->getCode(),
-            'fullName' => $currency->getFullName(),
-            'sign' => $currency->getSign()
-        ]);
+        $code = strtoupper($currency->getCode());
+        $fullName = $currency->getFullName();
+        $sign = $currency->getSign();
+
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO currencies (code, fullname, sign) VALUES (:code, :fullName, :sign)");
+            $stmt->bindParam(':code', $code);
+            $stmt->bindParam(':fullName', $fullName);
+            $stmt->bindParam(':sign', $sign);
+
+            $stmt->execute();
+        } catch (PDOException $exception) {
+            if ($exception->errorInfo[0] == 23505) {
+                throw new CurrencyCodeExistsException("Валюта с кодом $code уже существует");
+            }
+            if ($exception->errorInfo[0] == 23514) {
+                throw new ValidationCodeCurrencyException("Код валюты должен состоять из 3 латинских букв");
+            }
+        }
     }
 }

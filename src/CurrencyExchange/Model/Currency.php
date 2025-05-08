@@ -5,17 +5,17 @@ namespace App\CurrencyExchange\Model;
 
 class Currency
 {
-    private int $id;
+    private ?int $id;
     private string $code;
     private string $fullName;
     private string $sign;
 
-    public function __construct(int $id, string $code, string $fullName, string $sign)
+    public function __construct(string $code, string $fullName, string $sign, ?int $id = null)
     {
-        $this->id = $id;
         $this->code = $code;
         $this->fullName = $fullName;
         $this->sign = $sign;
+        $this->id = $id;
     }
 
     public function getId(): int
