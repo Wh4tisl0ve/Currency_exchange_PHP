@@ -2,7 +2,7 @@
 
 namespace App\Framework\ArgumentsResolver;
 
-use App\Framework\ArgumentsResolver\Exception\ArgumentValueNotFound;
+use App\Framework\ArgumentsResolver\Exception\ArgumentValueNotFoundException;
 
 class ArgumentsResolver
 {
@@ -15,7 +15,7 @@ class ArgumentsResolver
     }
 
     /**
-     * @throws ArgumentValueNotFound
+     * @throws ArgumentValueNotFoundException
      */
     private static function findArgumentValue($methodParam, array $arguments): mixed
     {
@@ -33,6 +33,6 @@ class ArgumentsResolver
                 return $methodParam->getDefaultValue();
             }
         }
-        throw new ArgumentValueNotFound("Не найдено значения для параметра $paramName");
+        throw new ArgumentValueNotFoundException("Не найдено значения для параметра $paramName");
     }
 }

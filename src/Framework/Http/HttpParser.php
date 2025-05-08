@@ -13,8 +13,7 @@ class HttpParser
 
         if ($request["REQUEST_METHOD"] == "POST")
             $data = $_POST;
-
-        if ($request["CONTENT_TYPE"] == "application/x-www-form-urlencoded")
+        elseif ($request["CONTENT_TYPE"] == "application/x-www-form-urlencoded")
             parse_str(file_get_contents('php://input'), $data);
 
         return new HttpRequest($data, $request["REQUEST_URI"], $request["REQUEST_METHOD"]);

@@ -5,7 +5,7 @@ namespace App\Framework\Router;
 
 use App\Framework\Contract\AbstractRouter;
 use App\Framework\Router\Exception\RouteExistsException;
-use App\Framework\Router\Exception\RouteNotExistsException;
+use App\Framework\Router\Exception\RouteNotFoundException;
 
 class HttpRouter extends AbstractRouter
 {
@@ -37,17 +37,19 @@ class HttpRouter extends AbstractRouter
             ];
         }
 
-        $routes = $this->routes[$method];
-        foreach ($routes as $route => $handler) {
-            if (preg_match($route, $nameRoute, $params)) {
-                $params = array_filter($params, 'is_string', ARRAY_FILTER_USE_KEY);
-                return [
-                    "handler" => $handler,
-                    "params" => $params
-                ];
+        if(isset($this->routes[$method])){
+            $routes = $this->routes[$method];
+            foreach ($routes as $route => $handler) {
+                if (preg_match($route, $nameRoute, $params)) {
+                    $params = array_filter($params, 'is_string', ARRAY_FILTER_USE_KEY);
+                    return [
+                        "handler" => $handler,
+                        "params" => $params
+                    ];
+                }
             }
         }
 
-        throw new RouteNotExistsException("Не найдено обработчика для $nameRoute");
+        throw new RouteNotFoundException("Не найдено обработчика для "  . $nameRoute);
     }
 }
