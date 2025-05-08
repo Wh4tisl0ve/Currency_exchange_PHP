@@ -2,11 +2,11 @@
 
 namespace App\CurrencyExchange\DAO\Currency;
 
-use App\CurrencyExchange\DAO\Exception\CurrencyCodeExistsException;
-use App\CurrencyExchange\DAO\Exception\ValidationCodeCurrencyException;
-use PDO;
-use App\CurrencyExchange\DAO\Exception\CurrencyNotFoundException;
+use App\CurrencyExchange\DAO\Currency\Exception\CurrencyCodeExistsException;
+use App\CurrencyExchange\DAO\Currency\Exception\CurrencyNotFoundException;
+use App\CurrencyExchange\DAO\Currency\Exception\ValidationCodeCurrencyException;
 use App\CurrencyExchange\Model\Currency;
+use PDO;
 use PDOException;
 
 

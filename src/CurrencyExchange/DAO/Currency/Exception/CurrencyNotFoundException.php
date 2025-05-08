@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CurrencyExchange\DAO\Exception;
+namespace App\CurrencyExchange\DAO\Currency\Exception;
 
 use App\Framework\Exception\NotFoundException;
 

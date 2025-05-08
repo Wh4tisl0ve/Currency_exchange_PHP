@@ -2,7 +2,6 @@
 
 namespace App\CurrencyExchange\DAO\Currency;
 
-use App\CurrencyExchange\DAO\Exception\CurrencyNotFoundException;
 use App\CurrencyExchange\Model\Currency;
 
 interface CurrencyDAOInterface

@@ -3,13 +3,10 @@
 namespace App\CurrencyExchange\Controller;
 
 use App\CurrencyExchange\DAO\Currency\CurrencyDAOInterface;
-use App\CurrencyExchange\DAO\Exception\CurrencyNotFoundException;
 use App\CurrencyExchange\Model\Currency;
 use App\Framework\Http\HttpRequest;
 use App\Framework\Http\Response\HttpResponse;
 use App\Framework\Http\Response\JsonResponse;
-use App\Framework\Validation\ValidationException;
-use PDOException;
 
 class CurrencyController
 {
@@ -24,35 +21,30 @@ class CurrencyController
     {
         $currencies = $this->currencyDAO->findAll();
 
-        $currenciesJson = array_map(function ($currency) {
+        $currenciesJson = json_encode(array_map(function ($currency) {
             return [
                 'id' => $currency->getId(),
                 'code' => $currency->getCode(),
                 'name' => $currency->getFullName(),
                 'sign' => $currency->getSign(),
             ];
-        }, $currencies);
+        }, $currencies), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        return new JsonResponse(
-            json_encode($currenciesJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
-            200
-        );
+        return new JsonResponse($currenciesJson, 200);
     }
 
     public function getCurrency(HttpRequest $httpRequest, string $currencyCode): HttpResponse
     {
         $currency = $this->currencyDAO->findOne($currencyCode);
 
-        $currencyJson = [
+        $currencyJson = json_encode([
             'id' => $currency->getId(),
             'code' => $currency->getCode(),
             'name' => $currency->getFullName(),
             'sign' => $currency->getSign(),
-        ];
+        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        return new JsonResponse(
-            json_encode($currencyJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
-            200);
+        return new JsonResponse($currencyJson, 200);
     }
 
     public function addCurrency(HttpRequest $httpRequest): HttpResponse
@@ -70,15 +62,13 @@ class CurrencyController
 
         $currencyResult = $this->currencyDAO->findOne($currency->getCode());
 
-        $currencyJson = [
+        $currencyJson = json_encode([
             'id' => $currencyResult->getId(),
             'code' => $currencyResult->getCode(),
             'name' => $currencyResult->getFullName(),
             'sign' => $currencyResult->getSign(),
-        ];
+        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        return new JsonResponse(
-            json_encode($currencyJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
-            201);
+        return new JsonResponse($currencyJson, 201);
     }
 }
