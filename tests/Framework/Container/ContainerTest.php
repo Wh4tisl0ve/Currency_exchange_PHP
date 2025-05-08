@@ -1,28 +1,28 @@
 <?php
 
-namespace Tests\Framework\DI;
+namespace Tests\Framework\Container;
 
-use App\Framework\DI\ContainerDI;
-use App\Framework\DI\Exception\ServiceExistsException;
-use App\Framework\DI\Exception\ServiceNotFoundException;
+use App\Framework\Container\Container;
+use App\Framework\Container\Exception\ServiceExistsException;
+use App\Framework\Container\Exception\ServiceNotFoundException;
 use PHPUnit\Framework\TestCase;
 
-class ContainerDITest extends TestCase
+class ContainerTest extends TestCase
 {
-    public ContainerDI $containerDI;
+    public Container $containerDI;
 
     protected function setUp(): void
     {
-        $this->containerDI = new ContainerDI('test');
+        $this->containerDI = new Container('test');
 
-        $this->containerDI->register('testService', function (ContainerDI $container) {
+        $this->containerDI->register('testService', function (Container $container) {
             return 'test';
         });
     }
 
     public function testSuccessRegisterService()
     {
-        $this->containerDI->register('test', function (ContainerDI $container) {
+        $this->containerDI->register('test', function (Container $container) {
             return 'test';
         });
 
@@ -31,13 +31,13 @@ class ContainerDITest extends TestCase
 
     public function testRegisterExistsService()
     {
-        $this->containerDI->register('test', function (ContainerDI $container) {
+        $this->containerDI->register('test', function (Container $container) {
             return 'test';
         });
 
         $this->expectException(ServiceExistsException::class);
 
-        $this->containerDI->register('test', function (ContainerDI $container) {
+        $this->containerDI->register('test', function (Container $container) {
             return 'test';
         });
 

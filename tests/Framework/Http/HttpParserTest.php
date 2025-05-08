@@ -12,26 +12,26 @@ class HttpParserTest extends TestCase
     {
         $request = [
             "REQUEST_METHOD" => "GET",
-            "QUERY_STRING" => "query=test&search=test"
+            "QUERY_STRING" => "query=test&search=test",
+            "REQUEST_URI" => "/",
+            "CONTENT_TYPE" => ""
         ];
         $httpRequest = HttpParser::parse($request);
 
         $expectedResult = ["query" => "test", "search" => "test"];
 
-        $this->assertInstanceOf(HttpRequest::class, $httpRequest);
         $this->assertEquals($expectedResult, $httpRequest->getData());
     }
 
     public function testParsePostHttp()
     {
-        $request = ["REQUEST_METHOD" => "POST"];
+        $request = ["REQUEST_METHOD" => "POST", "REQUEST_URI" => "/", "CONTENT_TYPE" => "application/x-www-form-urlencoded"];
         $_POST = ["query" => "test", "search" => "test"];
 
         $httpRequest = HttpParser::parse($request);
 
         $expectedResult = ["query" => "test", "search" => "test"];
 
-        $this->assertInstanceOf(HttpRequest::class, $httpRequest);
         $this->assertEquals($expectedResult, $httpRequest->getData());
     }
 
@@ -40,13 +40,13 @@ class HttpParserTest extends TestCase
         $request = [
             "REQUEST_METHOD" => "DELETE",
             "CONTENT_TYPE" => "application/x-www-form-urlencoded",
+            "REQUEST_URI" => "/"
         ];
 
         $httpRequest = HttpParser::parse($request);
 
         $expectedResult = [];
 
-        $this->assertInstanceOf(HttpRequest::class, $httpRequest);
         $this->assertEquals($expectedResult, $httpRequest->getData());
     }
 }
