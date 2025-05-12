@@ -38,6 +38,9 @@ return [
         return new CurrencyController($container->get(CurrencyDAOInterface::class));
     },
     ExchangeRateController::class => function (Container $container) {
-        return new ExchangeRateController($container->get(ExchangeRateDAOInterface::class));
+        return new ExchangeRateController(
+            $container->get(ExchangeRateDAOInterface::class),
+            $container->get(CurrencyDAOInterface::class),
+        );
     }
 ];
