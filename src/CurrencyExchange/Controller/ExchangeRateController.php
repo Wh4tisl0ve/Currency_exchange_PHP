@@ -22,26 +22,11 @@ class ExchangeRateController
 
     public function getAllExchangeRates(HttpRequest $httpRequest): HttpResponse
     {
-        $exchangeRates = $this->exchangeRateDAO->findAll();
+        $data = $this->exchangeRateDAO->findAll();
 
         $exchangeRatesJson = json_encode(array_map(function ($exchangeRate) {
-            return [
-                'id' => $exchangeRate['id'],
-                'baseCurrency' => [
-                    'id' => $exchangeRate['base_currency_id'],
-                    'name' => $exchangeRate['base_currency_fullname'],
-                    'code' => $exchangeRate['base_currency_code'],
-                    'sign' => $exchangeRate['base_currency_sign'],
-                ],
-                'targetCurrency' => [
-                    'id' => $exchangeRate['target_currency_id'],
-                    'name' => $exchangeRate['target_currency_fullname'],
-                    'code' => $exchangeRate['target_currency_code'],
-                    'sign' => $exchangeRate['target_currency_sign'],
-                ],
-                'rate' => $exchangeRate['rate'],
-            ];
-        }, $exchangeRates), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            return $this->getArrayView($exchangeRate);
+        }, $data), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         return new JsonResponse($exchangeRatesJson, 200);
     }
@@ -54,24 +39,12 @@ class ExchangeRateController
         $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
         $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
 
-        $exchangeRate = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
+        $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
 
-        $exchangeRateJson = json_encode([
-            'id' => $exchangeRate['id'],
-            'baseCurrency' => [
-                'id' => $exchangeRate['base_currency_id'],
-                'name' => $exchangeRate['base_currency_fullname'],
-                'code' => $exchangeRate['base_currency_code'],
-                'sign' => $exchangeRate['base_currency_sign'],
-            ],
-            'targetCurrency' => [
-                'id' => $exchangeRate['target_currency_id'],
-                'name' => $exchangeRate['target_currency_fullname'],
-                'code' => $exchangeRate['target_currency_code'],
-                'sign' => $exchangeRate['target_currency_sign'],
-            ],
-            'rate' => $exchangeRate['rate'],
-        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $exchangeRateJson = json_encode(
+            $this->getArrayView($data),
+            JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+        );
 
         return new JsonResponse($exchangeRateJson, 200);
     }
@@ -97,25 +70,60 @@ class ExchangeRateController
 
         $this->exchangeRateDAO->add($exchangeRate);
 
-        $exchangeRate = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
+        $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
 
-        $exchangeRateJson = json_encode([
-            'id' => $exchangeRate['id'],
-            'baseCurrency' => [
-                'id' => $exchangeRate['base_currency_id'],
-                'name' => $exchangeRate['base_currency_fullname'],
-                'code' => $exchangeRate['base_currency_code'],
-                'sign' => $exchangeRate['base_currency_sign'],
-            ],
-            'targetCurrency' => [
-                'id' => $exchangeRate['target_currency_id'],
-                'name' => $exchangeRate['target_currency_fullname'],
-                'code' => $exchangeRate['target_currency_code'],
-                'sign' => $exchangeRate['target_currency_sign'],
-            ],
-            'rate' => $exchangeRate['rate'],
-        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $exchangeRateJson = json_encode($this->getArrayView($data),
+            JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        return new JsonResponse($exchangeRateJson, 201);
+    }
+
+    public function updateExchangeRate(HttpRequest $httpRequest, string $currencyPair): HttpResponse{
+        $httpRequest->validateData(["rate"]);
+
+        $data = $httpRequest->getData();
+
+        $baseCurrencyCode = substr($currencyPair, 0, 3);
+        $targetCurrencyCode = substr($currencyPair, 3, 6);
+        $rate = $data['rate'];
+
+        $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
+        $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
+
+        $exchangeRate = new ExchangeRate(
+            $baseCurrency->getId(),
+            $targetCurrency->getId(),
+            $rate,
+        );
+
+        $this->exchangeRateDAO->update($exchangeRate);
+
+        $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
+
+        $exchangeRateJson = json_encode($this->getArrayView($data),
+            JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         return new JsonResponse($exchangeRateJson, 200);
     }
+
+    private function getArrayView(array $data): array
+    {
+        return [
+            'id' => $data['id'],
+            'baseCurrency' => [
+                'id' => $data['base_currency_id'],
+                'name' => $data['base_currency_fullname'],
+                'code' => $data['base_currency_code'],
+                'sign' => $data['base_currency_sign'],
+            ],
+            'targetCurrency' => [
+                'id' => $data['target_currency_id'],
+                'name' => $data['target_currency_fullname'],
+                'code' => $data['target_currency_code'],
+                'sign' => $data['target_currency_sign'],
+            ],
+            'rate' => $data['rate'],
+        ];
+    }
+
 }

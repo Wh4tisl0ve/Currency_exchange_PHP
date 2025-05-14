@@ -15,4 +15,7 @@ return [
         "#/currencies$#" => [CurrencyController::class, 'addCurrency'],
         "#/exchangeRates$#" => [ExchangeRateController::class, 'addExchangeRate'],
     ],
+    'PATCH' => [
+        "#^/exchangeRate/(?P<currencyPair>[a-zA-Z]{6})$#" => [ExchangeRateController::class, 'updateExchangeRate'],
+    ]
 ];

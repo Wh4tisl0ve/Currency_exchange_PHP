@@ -96,6 +96,16 @@ class DBExchangeRateDAO implements ExchangeRateDAOInterface
 
     public function update(ExchangeRate $exchangeRate): void
     {
-        // TODO: Implement update() method.
+        $baseCurrencyId = $exchangeRate->getBaseCurrencyId();
+        $targetCurrencyId = $exchangeRate->getTargetCurrencyId();
+        $rate = $exchangeRate->getRate();
+
+        $stmt = $this->pdo->prepare("UPDATE exchange_rates SET rate = :rate
+                                           WHERE base_currency_id = :base_id AND target_currency_id = :target_id");
+        $stmt->bindParam(':base_id', $baseCurrencyId);
+        $stmt->bindParam(':target_id', $targetCurrencyId);
+        $stmt->bindParam(':rate', $rate);
+
+        $stmt->execute();
     }
 }
