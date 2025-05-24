@@ -5,6 +5,7 @@ namespace App\DAO\Currency;
 use App\DAO\Currency\Exception\CurrencyCodeExistsException;
 use App\DAO\Currency\Exception\CurrencyNotFoundException;
 use App\DAO\Currency\Exception\ValidationCodeCurrencyException;
+use App\Exception\FieldOverflowException;
 use App\Model\Currency;
 use PDO;
 use PDOException;
@@ -60,8 +61,7 @@ class DBCurrencyDAO implements CurrencyDAOInterface
     }
 
     /**
-     * @throws CurrencyCodeExistsException
-     * @throws ValidationCodeCurrencyException
+     * @throws CurrencyCodeExistsException|ValidationCodeCurrencyException|FieldOverflowException
      */
     public function add(Currency $currency): void
     {
@@ -77,12 +77,14 @@ class DBCurrencyDAO implements CurrencyDAOInterface
 
             $stmt->execute();
         } catch (PDOException $exception) {
-            if ($exception->errorInfo[0] == 23505) {
-                throw new CurrencyCodeExistsException("Валюта с кодом $code уже существует");
-            }
-            if ($exception->errorInfo[0] == 23514) {
+            if ($exception->errorInfo[0] == 22001)
+                throw new FieldOverflowException("Длина строки была больше ожидаемой");
+
+            if ($exception->errorInfo[0] == 23514)
                 throw new ValidationCodeCurrencyException("Код валюты должен состоять из 3 латинских букв");
-            }
+
+            if ($exception->errorInfo[0] == 23505)
+                throw new CurrencyCodeExistsException("Валюта с кодом $code уже существует");
         }
     }
 }
