@@ -2,14 +2,16 @@
 
 namespace App\Model;
 
+use BcMath\Number;
+
 class ExchangeRate
 {
     private ?int $id;
     private int $baseCurrencyId;
     private int $targetCurrencyId;
-    private float $rate;
+    private Number $rate;
 
-    public function __construct(int $baseCurrencyId, int $targetCurrencyId, float $rate, ?int $id = null)
+    public function __construct(int $baseCurrencyId, int $targetCurrencyId, Number $rate, ?int $id = null)
     {
         $this->baseCurrencyId = $baseCurrencyId;
         $this->targetCurrencyId = $targetCurrencyId;
@@ -19,6 +21,7 @@ class ExchangeRate
 
     public function getId(): ?int
     {
+
         return $this->id;
     }
 
@@ -32,7 +35,7 @@ class ExchangeRate
         return $this->targetCurrencyId;
     }
 
-    public function getRate(): float
+    public function getRate(): Number
     {
         return $this->rate;
     }

@@ -1,6 +1,6 @@
 FROM composer:2.2 AS composer
 
-FROM php:8.3-fpm AS php-extensions
+FROM php:8.4-fpm AS php-extensions
 ENV TZ=Europe/Moscow
 RUN apt-get -qq update && apt-get -qq --yes install libfcgi-bin
 RUN apt-get -qq update && apt-get -qq --yes install libpq-dev \
@@ -9,6 +9,8 @@ RUN apt-get -qq update && apt-get -qq --yes install libpq-dev \
 RUN apt-get -qq update && apt-get -qq --yes install git unzip
 RUN pecl channel-update pecl.php.net && pecl install xdebug && docker-php-ext-enable xdebug
 RUN apt-get -qq update && apt-get -qq --yes install procps
+
+RUN docker-php-ext-install bcmath
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /www

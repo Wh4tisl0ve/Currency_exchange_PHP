@@ -2,22 +2,26 @@
 
 namespace App\Controller;
 
+use BcMath\Number;
+use ValueError;
 use App\DAO\Currency\CurrencyDAOInterface;
+use App\DAO\ExchangeRate\Exception\ExchangeRateExistsException;
+use App\DAO\ExchangeRate\Exception\ExchangeRateNotFoundException;
 use App\DAO\ExchangeRate\ExchangeRateDAOInterface;
 use App\Model\ExchangeRate;
+use MiniBox\Exception\InvalidDataException;
+use MiniBox\Exception\ValidationException;
 use MiniBox\Http\HttpRequest;
 use MiniBox\Http\Response\HttpResponse;
 use MiniBox\Http\Response\JsonResponse;
 
-class ExchangeRateController
-{
-    private ExchangeRateDAOInterface $exchangeRateDAO;
-    private CurrencyDAOInterface $currencyDAO;
 
-    public function __construct(ExchangeRateDAOInterface $exchangeRateDAO, CurrencyDAOInterface $currencyDAO)
+readonly class ExchangeRateController
+{
+    public function __construct(
+        private ExchangeRateDAOInterface $exchangeRateDAO,
+        private CurrencyDAOInterface     $currencyDAO)
     {
-        $this->exchangeRateDAO = $exchangeRateDAO;
-        $this->currencyDAO = $currencyDAO;
     }
 
     public function getAllExchangeRates(HttpRequest $httpRequest): HttpResponse
@@ -31,24 +35,34 @@ class ExchangeRateController
         return new JsonResponse($exchangeRatesJson, 200);
     }
 
+    /**
+     * @throws ExchangeRateNotFoundException
+     */
     public function getExchangeRate(HttpRequest $httpRequest, string $currencyPair): HttpResponse
     {
         $baseCurrencyCode = substr($currencyPair, 0, 3);
         $targetCurrencyCode = substr($currencyPair, 3, 6);
 
-        $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
-        $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
+        try {
+            $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
+            $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
 
-        $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
+            $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
 
-        $exchangeRateJson = json_encode(
-            $this->getArrayView($data),
-            JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
-        );
+            $exchangeRateJson = json_encode(
+                $this->getArrayView($data),
+                JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+            );
 
-        return new JsonResponse($exchangeRateJson, 200);
+            return new JsonResponse($exchangeRateJson, 200);
+        } catch (ExchangeRateNotFoundException) {
+            throw new ExchangeRateNotFoundException("Обменный курс из $baseCurrencyCode в $targetCurrencyCode не найден");
+        }
     }
 
+    /**
+     * @throws ValidationException|ExchangeRateExistsException|InvalidDataException
+     */
     public function addExchangeRate(HttpRequest $httpRequest): HttpResponse
     {
         $httpRequest->validateData(["baseCurrencyCode", "targetCurrencyCode", "rate"]);
@@ -57,53 +71,71 @@ class ExchangeRateController
 
         $baseCurrencyCode = $data['baseCurrencyCode'];
         $targetCurrencyCode = $data['targetCurrencyCode'];
-        $rate = $data['rate'];
 
-        $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
-        $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
+        try {
+            $rate = new Number(str_replace(',', '.', $data['rate']));
 
-        $exchangeRate = new ExchangeRate(
-            $baseCurrency->getId(),
-            $targetCurrency->getId(),
-            $rate,
-        );
+            $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
+            $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
 
-        $this->exchangeRateDAO->add($exchangeRate);
+            $exchangeRate = new ExchangeRate(
+                $baseCurrency->getId(),
+                $targetCurrency->getId(),
+                $rate,
+            );
 
-        $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
+            $this->exchangeRateDAO->add($exchangeRate);
 
-        $exchangeRateJson = json_encode($this->getArrayView($data),
-            JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
 
-        return new JsonResponse($exchangeRateJson, 201);
+            $exchangeRateJson = json_encode($this->getArrayView($data),
+                JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+            return new JsonResponse($exchangeRateJson, 201);
+        } catch (ValueError) {
+            throw new InvalidDataException("Поле rate должно быть числовым типом");
+        } catch (ExchangeRateExistsException) {
+            throw new ExchangeRateExistsException("Обменный курс из $baseCurrencyCode в $targetCurrencyCode уже существует");
+        }
     }
 
-    public function updateExchangeRate(HttpRequest $httpRequest, string $currencyPair): HttpResponse{
+    /**
+     * @throws ValidationException|InvalidDataException|ExchangeRateNotFoundException
+     */
+    public function updateExchangeRate(HttpRequest $httpRequest, string $currencyPair): HttpResponse
+    {
         $httpRequest->validateData(["rate"]);
 
         $data = $httpRequest->getData();
 
         $baseCurrencyCode = substr($currencyPair, 0, 3);
         $targetCurrencyCode = substr($currencyPair, 3, 6);
-        $rate = $data['rate'];
 
-        $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
-        $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
+        try {
+            $rate = new Number(str_replace(',', '.', $data['rate']));
 
-        $exchangeRate = new ExchangeRate(
-            $baseCurrency->getId(),
-            $targetCurrency->getId(),
-            $rate,
-        );
+            $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
+            $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
 
-        $this->exchangeRateDAO->update($exchangeRate);
+            $exchangeRate = new ExchangeRate(
+                $baseCurrency->getId(),
+                $targetCurrency->getId(),
+                $rate,
+            );
 
-        $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
+            $this->exchangeRateDAO->update($exchangeRate);
 
-        $exchangeRateJson = json_encode($this->getArrayView($data),
-            JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $data = $this->exchangeRateDAO->findOne($baseCurrency->getId(), $targetCurrency->getId());
 
-        return new JsonResponse($exchangeRateJson, 200);
+            $exchangeRateJson = json_encode($this->getArrayView($data),
+                JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+            return new JsonResponse($exchangeRateJson, 200);
+        } catch (ValueError) {
+            throw new InvalidDataException("Поле rate должно быть числовым типом");
+        } catch (ExchangeRateNotFoundException) {
+            throw new ExchangeRateNotFoundException("Обменный курс из $baseCurrencyCode в $targetCurrencyCode не найден");
+        }
     }
 
     private function getArrayView(array $data): array
@@ -125,5 +157,4 @@ class ExchangeRateController
             'rate' => $data['rate'],
         ];
     }
-
 }

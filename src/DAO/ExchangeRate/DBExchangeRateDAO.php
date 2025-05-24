@@ -89,7 +89,7 @@ class DBExchangeRateDAO implements ExchangeRateDAOInterface
             $stmt->execute();
         } catch (PDOException $exception) {
             if ($exception->errorInfo[0] == 23505) {
-                throw new ExchangeRateExistsException("Валюта с base_Id: $baseCurrencyId и target_Id: $targetCurrencyId уже существует");
+                throw new ExchangeRateExistsException("Обменный курс с base_Id: $baseCurrencyId и target_Id: $targetCurrencyId уже существует");
             }
         }
     }
