@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "245f24379bedffc9281de7cbc7067693",
+    "content-hash": "8768bf3088dcbb420ceeb70442b1ffa2",
     "packages": [
         {
             "name": "psr/container",
@@ -65,12 +65,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Wh4tisl0ve/MiniBox.git",
-                "reference": "fd720dda9df47c73a4fb33455340790512a5e8b8"
+                "reference": "c46397533bae1a7ce75d8ddbbcfd638af9817b89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Wh4tisl0ve/MiniBox/zipball/fd720dda9df47c73a4fb33455340790512a5e8b8",
-                "reference": "fd720dda9df47c73a4fb33455340790512a5e8b8",
+                "url": "https://api.github.com/repos/Wh4tisl0ve/MiniBox/zipball/c46397533bae1a7ce75d8ddbbcfd638af9817b89",
+                "reference": "c46397533bae1a7ce75d8ddbbcfd638af9817b89",
                 "shasum": ""
             },
             "require": {
@@ -103,7 +103,7 @@
                 "source": "https://github.com/Wh4tisl0ve/MiniBox/tree/main",
                 "issues": "https://github.com/Wh4tisl0ve/MiniBox/issues"
             },
-            "time": "2025-05-24T16:50:46+00:00"
+            "time": "2025-05-24T21:07:48+00:00"
         }
     ],
     "packages-dev": [
@@ -1718,7 +1718,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-bcmath": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
