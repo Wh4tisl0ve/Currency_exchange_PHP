@@ -1,8 +1,8 @@
 <?php
 
 
-use App\CurrencyExchange\Controller\CurrencyController;
-use App\CurrencyExchange\Controller\ExchangeRateController;
+use App\Controller\CurrencyController;
+use App\Controller\ExchangeRateController;
 
 return [
     'GET' => [

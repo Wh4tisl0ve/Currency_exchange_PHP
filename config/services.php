@@ -1,14 +1,12 @@
 <?php
 
-use App\CurrencyExchange\Controller\CurrencyController;
-use App\CurrencyExchange\Controller\ExchangeRateController;
-use App\CurrencyExchange\DAO\Currency\CurrencyDAOInterface;
-use App\CurrencyExchange\DAO\Currency\DBCurrencyDAO;
-use App\CurrencyExchange\DAO\ExchangeRate\DBExchangeRateDAO;
-use App\CurrencyExchange\DAO\ExchangeRate\ExchangeRateDAOInterface;
-use App\Framework\Container\Container;
-use App\Framework\Contract\AbstractRouter;
-use App\Framework\Router\HttpRouter;
+use App\Controller\CurrencyController;
+use App\Controller\ExchangeRateController;
+use App\DAO\Currency\CurrencyDAOInterface;
+use App\DAO\Currency\DBCurrencyDAO;
+use App\DAO\ExchangeRate\DBExchangeRateDAO;
+use App\DAO\ExchangeRate\ExchangeRateDAOInterface;
+use MiniBox\Container\Container;
 
 
 return [
@@ -20,9 +18,6 @@ return [
         $password = getenv('DB_PASSWORD');
 
         return new PDO("pgsql:host=$host;port=$port;dbname=$dbName", $user, $password);
-    },
-    AbstractRouter::class => function (Container $container) {
-        return new HttpRouter(__DIR__);
     },
 
     # DAO
