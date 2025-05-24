@@ -6,18 +6,12 @@ use BcMath\Number;
 
 class ExchangeRate
 {
-    private ?int $id;
-    private int $baseCurrencyId;
-    private int $targetCurrencyId;
-    private Number $rate;
-
-    public function __construct(int $baseCurrencyId, int $targetCurrencyId, Number $rate, ?int $id = null)
-    {
-        $this->baseCurrencyId = $baseCurrencyId;
-        $this->targetCurrencyId = $targetCurrencyId;
-        $this->rate = $rate;
-        $this->id = $id;
-    }
+    public function __construct(
+        private int    $baseCurrencyId,
+        private int    $targetCurrencyId,
+        private Number $rate,
+        private ?int   $id = null
+    ) {}
 
     public function getId(): ?int
     {

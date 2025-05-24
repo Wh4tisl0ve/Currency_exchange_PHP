@@ -2,23 +2,20 @@
 
 namespace App\DAO\Currency;
 
+use PDO;
+use PDOException;
 use App\DAO\Currency\Exception\CurrencyCodeExistsException;
 use App\DAO\Currency\Exception\CurrencyNotFoundException;
 use App\DAO\Currency\Exception\ValidationCodeCurrencyException;
 use App\Exception\FieldOverflowException;
 use App\Model\Currency;
-use PDO;
-use PDOException;
 
 
 class DBCurrencyDAO implements CurrencyDAOInterface
 {
-    private PDO $pdo;
-
-    public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
+    public function __construct(
+        private PDO $pdo
+    ) {}
 
     public function findAll(): array
     {

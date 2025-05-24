@@ -2,20 +2,18 @@
 
 namespace App\DAO\ExchangeRate;
 
+use PDO;
+use PDOException;
 use App\DAO\ExchangeRate\Exception\ExchangeRateExistsException;
 use App\DAO\ExchangeRate\Exception\ExchangeRateNotFoundException;
 use App\Model\ExchangeRate;
-use PDO;
-use PDOException;
+
 
 class DBExchangeRateDAO implements ExchangeRateDAOInterface
 {
-    private PDO $pdo;
-
-    public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
+    public function __construct(
+        private PDO $pdo
+    ) {}
 
     public function findAll(): array
     {

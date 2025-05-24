@@ -16,13 +16,12 @@ use MiniBox\Http\Response\HttpResponse;
 use MiniBox\Http\Response\JsonResponse;
 
 
-readonly class ExchangeRateController
+class ExchangeRateController
 {
     public function __construct(
         private ExchangeRateDAOInterface $exchangeRateDAO,
-        private CurrencyDAOInterface     $currencyDAO)
-    {
-    }
+        private CurrencyDAOInterface     $currencyDAO
+    ) {}
 
     public function getAllExchangeRates(HttpRequest $httpRequest): HttpResponse
     {

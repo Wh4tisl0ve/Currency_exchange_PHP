@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\DAO\Currency\CurrencyDAOInterface;
-
 use App\Model\Currency;
 use MiniBox\Http\HttpRequest;
 use MiniBox\Http\Response\HttpResponse;
@@ -11,12 +10,9 @@ use MiniBox\Http\Response\JsonResponse;
 
 class CurrencyController
 {
-    private CurrencyDAOInterface $currencyDAO;
-
-    public function __construct(CurrencyDAOInterface $currencyDAO)
-    {
-        $this->currencyDAO = $currencyDAO;
-    }
+    public function __construct(
+        private CurrencyDAOInterface $currencyDAO
+    ) {}
 
     public function getAllCurrencies(HttpRequest $httpRequest): HttpResponse
     {
