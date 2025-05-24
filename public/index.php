@@ -4,14 +4,11 @@ use App\Exception\ConflictException;
 use MiniBox\Application;
 use MiniBox\Exception\NotFoundException;
 use MiniBox\Exception\ValidationException;
-use MiniBox\Http\HttpParser;
 use MiniBox\Http\Response\JsonResponse;
 
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-
-$httpRequest = HttpParser::parse($_SERVER);
 
 $app = new Application(configRoutesPath: __DIR__ . "/../config/routes.php");
 $app->registerExceptionHandler(
@@ -42,5 +39,5 @@ $app->registerExceptionHandler(
     }
 );
 
-$response = $app->handle($httpRequest);
+$response = $app->handle();
 $response->send();
