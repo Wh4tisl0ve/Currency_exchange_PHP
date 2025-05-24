@@ -2,8 +2,8 @@
 
 use App\Exception\ConflictException;
 use MiniBox\Application;
+use MiniBox\Exception\InvalidDataException;
 use MiniBox\Exception\NotFoundException;
-use MiniBox\Exception\ValidationException;
 use MiniBox\Http\Response\JsonResponse;
 
 
@@ -16,17 +16,16 @@ $app->registerExceptionHandler(
         $statusCode = 500;
         $message = 'Ошибка сервера';
 
-        if ($exception instanceof ValidationException) {
+        if ($exception instanceof InvalidDataException) {
             $statusCode = 400;
             $message = $exception->getMessage();
-        }
-        if ($exception instanceof ConflictException) {
+        } elseif ($exception instanceof ConflictException) {
             $statusCode = 409;
             $message = $exception->getMessage();
         } elseif ($exception instanceof NotFoundException) {
             $statusCode = 404;
             $message = $exception->getMessage();
-        } elseif ($exception instanceof PDOException) {
+        } else if ($exception instanceof PDOException) {
             $message = 'Ошибка работы БД';
         }
 
