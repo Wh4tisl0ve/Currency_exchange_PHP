@@ -6,18 +6,22 @@ use BcMath\Number;
 
 class ExchangerService
 {
-    public static function calcByDirectRate(Number $rate, Number $amount): Number
+    public static function calcByDirectRate(Number $rate, Number $amount): array
     {
-        return new Number(0);
+        return [$rate, $rate->mul($amount, 4)];
     }
 
-    public static function calcByReverseRate(Number $rate, Number $amount): Number
+    public static function calcByReverseRate(Number $rate, Number $amount): array
     {
-        return new Number(0);
+        $rate = new Number(1)->div($rate, 4);
+        return [$rate, $amount->mul($rate, 4)];
     }
 
-    public static function calcByCrossRate(Number $rate, Number $amount): Number
+    public static function calcByCrossRate(Number $usdToBaseRate, $usdToTargetRate, Number $amount): array
     {
-        return new Number(0);
+        $baseToUsd = $amount->mul(new Number(1)->div($usdToBaseRate));
+        $convertedAmount = $baseToUsd->mul($usdToTargetRate, 4);
+        $rate = $convertedAmount->div($amount, 4);
+        return [$rate, $convertedAmount];
     }
 }
