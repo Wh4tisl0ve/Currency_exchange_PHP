@@ -15,7 +15,6 @@ class ExchangeRate
 
     public function getId(): ?int
     {
-
         return $this->id;
     }
 
