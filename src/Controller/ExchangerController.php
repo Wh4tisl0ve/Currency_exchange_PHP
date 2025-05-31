@@ -37,6 +37,9 @@ class ExchangerController
             $fromCurrencyCode = $data["from"];
             $toCurrencyCode = $data["to"];
             $amount = new Number(str_replace(',', '.', $data["amount"]));
+            if ($amount->compare(new Number(0)) == -1) {
+                throw new ValidationException('amount должно быть больше 0');
+            }
 
             $baseCurrency = $this->currencyDAO->findOne($fromCurrencyCode);
             $targetCurrency = $this->currencyDAO->findOne($toCurrencyCode);

@@ -73,6 +73,9 @@ class ExchangeRateController
 
         try {
             $rate = new Number(str_replace(',', '.', $data['rate']));
+            if($rate->compare(new Number(0)) == -1){
+                throw new ValidationException('rate должно быть больше 0');
+            }
 
             $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
             $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
@@ -112,6 +115,9 @@ class ExchangeRateController
 
         try {
             $rate = new Number(str_replace(',', '.', $data['rate']));
+            if($rate->compare(new Number(0)) == -1){
+                throw new ValidationException('rate должно быть больше 0');
+            }
 
             $baseCurrency = $this->currencyDAO->findOne($baseCurrencyCode);
             $targetCurrency = $this->currencyDAO->findOne($targetCurrencyCode);
