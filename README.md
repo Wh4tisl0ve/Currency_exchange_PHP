@@ -11,7 +11,7 @@ REST API для описания валют и обменных курсов.
 </p>
 
 ## Запуск проекта
-1. Выполните клонирование проекта `git clone https://github.com/Wh4tisl0ve/Currency_exchange_DRF.git`
+1. Выполните клонирование проекта `git clone https://github.com/Wh4tisl0ve/Currency_exchange_PHP.git`
 2. Выполните установку Docker
 3. Выполните копирование .env.dist из deploy и заполните переменные окружения
 4. Выполните команду `docker-compose up --build -d`
