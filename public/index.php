@@ -10,7 +10,10 @@ use MiniBox\Http\Response\JsonResponse;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 
-$app = new Application(configRoutesPath: __DIR__ . "/../config/routes.php");
+$app = new Application(
+    configServicesPath: __DIR__ . "/../config/service.php",
+    configRoutesPath: __DIR__ . "/../config/routes.php"
+);
 $app->registerExceptionHandler(
     function (Throwable $exception) {
         $statusCode = 500;

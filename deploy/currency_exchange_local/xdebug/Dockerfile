@@ -16,7 +16,6 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /www
 
 FROM php-extensions AS composer-install
-RUN apt-get -qq update && apt-get -qq --yes install  git
-RUN git clone https://github.com/Wh4tisl0ve/Currency_exchange_PHP.git .
+COPY ./composer.json ./composer.lock /www/
 RUN --mount=type=cache,target=/var/www/.composer/cache composer install --no-interaction --optimize-autoloader
-
+COPY ./ /www/
